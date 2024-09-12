@@ -1,9 +1,33 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Chat Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+<div class="container mt-5">
+    <h1 class="text-center display-4">Realtime Chat Application</h1>
+
+    <!-- Kullanıcı Bilgisi ve Mesaj Formu -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="usernameInput">Kullanıcı Adı:</label>
+                <input type="text" id="usernameInput" class="form-control" placeholder="Adınızı girin..." />
+            </div>
+            <div class="form-group mt-3">
+                <label for="messageInput">Mesajınız:</label>
+                <textarea id="messageInput" class="form-control" rows="3" placeholder="Mesajınızı girin..."></textarea>
+            </div>
+            <button id="btnSendMessage" class="btn btn-primary btn-block mt-3">Mesajı Gönder</button>
+        </div>
+    </div>
+
+    <!-- Mesajları Gösterdiğimiz Kısım -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div id="messagesList" class="border rounded p-3 bg-light" style="height: 300px; overflow-y: scroll;">
+                <!-- Mesajlar burada görüntülenecek -->
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -19,15 +43,45 @@
                 console.log("SignalR connected.");
             }
             catch (err) {
-                console.error(er);
-                //setTimeout(start, 5000);
-                //eğer bir problem çıkarsa 5 saniye içinde tekrar denesin diye
+                console.error(err);
+                setTimeout(start, 5000);
             }
         }
-        @* connection.onclose(async () => {
-        await start();
-        }) *@
-            start();
-    </script>
 
+        // Bağlantı kapanırsa tekrar başlat.
+        connection.onclose(async () => {
+            await start();
+        })
+
+        // Bağlantıyı başlat.
+        start();
+
+        // Sunucudan gelen mesajları dinleyelim ve ekrana yazdıralım.
+        connection.on("ReceiveMessage", (user, message) => {
+            const msg = `${user}: ${message}`;
+            const msgDiv = document.createElement("div");
+            msgDiv.textContent = msg;
+            document.getElementById("messagesList").appendChild(msgDiv);
+            console.log(msg);
+        });
+
+        // Butona tıklanınca mesaj gönderme fonksiyonu
+        document.getElementById("btnSendMessage").addEventListener("click", function () {
+            const user = document.getElementById("usernameInput").value;
+            const message = document.getElementById("messageInput").value;
+
+            if (user === "" || message === "") {
+                alert("Lütfen kullanıcı adı ve mesajı doldurun.");
+                return;
+            }
+
+            // SignalR ile sunucuya hem kullanıcı adını hem de mesajı gönder 
+            connection.invoke("SendMessage", user, message)
+                .then(() => {
+                    console.log("Message sent:", message);
+                    document.getElementById("messageInput").value = ""; // Mesaj alanını temizle
+                })
+                .catch(err => console.error(err));
+        });
+    </script>
 }

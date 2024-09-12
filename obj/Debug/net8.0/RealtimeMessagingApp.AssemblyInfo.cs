@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RealtimeMessagingApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f3a7407e7f52398295e059eec760dd4d41cdb5e5")]
 [assembly: System.Reflection.AssemblyProductAttribute("RealtimeMessagingApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RealtimeMessagingApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

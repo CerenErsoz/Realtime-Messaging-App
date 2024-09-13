@@ -17,7 +17,10 @@ public class Startup
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAll",
-                builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                builder =>
+                builder.WithOrigins("https://localhost:5224")
+                .AllowAnyMethod()
+                .AllowAnyHeader());
         });
     }
 
